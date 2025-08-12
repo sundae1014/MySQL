@@ -116,20 +116,81 @@ join nurse n on n.nur_id = p.nur_id;
 
 -- 문제 4
 select
-	pat_name,
-    doc_name,
-    treat_desc,
-    chart_desc,
-    treat_datetime
-from treatment t;
+	p.pat_name,
+    d.doc_name,
+    t.treat_desc,
+    c.chart_desc,
+    t.treat_datetime
+from treatment t
+join doctor d on t.doc_id = d.doc_id
+join patient p on p.pat_id = t.pat_id
+join chart c on c.treat_no = t.treat_no;
 
 -- 문제 5
--- 문제 6
--- 문제 7 
--- 문제 8 
--- 문제 9
--- 문제 10
+select 
+	t.treat_no 진료번호,
+    p.pat_name 환자명,
+    d.doc_name 담당의사명,
+    t.treat_desc 진료내용,
+    c.chart_desc 처방내용,
+    t.treat_datetime 진료날짜
+from treatment t
+join doctor d on d.doc_id = t.doc_id
+join patient p on p.pat_id = t.pat_id
+join chart c on c.treat_no = t.treat_no
+join department a on a.dep_no = d.dep_no
+where a.dep_name = '외과';
 
+-- 문제 6
+select 
+	t.treat_no 진료번호,
+    p.pat_name 환자명,
+    d.doc_name 담당의사,
+    t.treat_desc 진료내용,
+    c.chart_desc 처방내용,
+    t.treat_datetime 진료날짜
+from treatment t
+join patient p on p.pat_id = t.pat_id
+join doctor d on d.doc_id = t.doc_id
+join chart c on c.treat_no = t.treat_no
+where treat_desc like '%화상';
+
+-- 문제 7 
+SELECT *
+FROM patient
+WHERE (
+    YEAR(CURDATE()) 
+    - (CASE 
+         WHEN SUBSTRING(pat_jumin, 8, 1) IN ('1', '2') THEN 1900 + SUBSTRING(pat_jumin, 1, 2)
+         WHEN SUBSTRING(pat_jumin, 8, 1) IN ('3', '4') THEN 2000 + SUBSTRING(pat_jumin, 1, 2)
+       END)
+    - (DATE_FORMAT(CURDATE(), '%m%d') < SUBSTRING(pat_jumin, 3, 4))
+) BETWEEN 30 AND 39;
+
+-- 문제 8 
+select 
+	a.dep_manager,
+    a.dep_name
+from department a
+left join doctor b on b.dep_no = a.dep_no
+where b.doc_id is null;
+
+-- 문제 9
+select group_concat(p.pat_name order by p.pat_name asc separator '^') as 환자명
+from patient p 
+join nurse n on n.nur_id = p.nur_id
+where n.nur_name = '김태희';
+
+-- 문제 10
+select
+	n.nur_id,
+	n.nur_name,
+	count(p.pat_id) as "담당환자 수"
+from nurse n
+join patient p on p.nur_id = n.nur_id
+group by n.nur_id, n.nur_name
+order by count(p.pat_id) desc
+limit 1;
 
 
 

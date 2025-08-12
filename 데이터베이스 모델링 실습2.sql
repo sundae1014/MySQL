@@ -129,19 +129,45 @@ join course c on c.csNo = e.csNo
 join professor p on p.proNo = e.proNo;
 
 -- 문제 6 
+UPDATE enrollment SET `scoreAttd` = '100', `socreMid` = '80', `scoreFinal` = '100' WHERE (`csNo` = '101001') and (`proNo` = 'P10101') and (`stdNo` = '20101001');
+UPDATE enrollment SET `scoreAttd` = '90', `socreMid` = '80', `scoreFinal` = '70' WHERE (`csNo` = '101002') and (`proNo` = 'P10102') and (`stdNo` = '20101001');
+UPDATE enrollment SET `scoreAttd` = '80', `socreMid` = '90', `scoreFinal` = '90' WHERE (`csNo` = '101003') and (`proNo` = 'P10102') and (`stdNo` = '20101001');
+UPDATE enrollment SET `scoreAttd` = '70', `socreMid` = '80', `scoreFinal` = '90' WHERE (`csNo` = '111011') and (`proNo` = 'P11103') and (`stdNo` = '20111013');
+UPDATE enrollment SET `scoreAttd` = '70', `socreMid` = '100', `scoreFinal` = '70' WHERE (`csNo` = '111012') and (`proNo` = 'P11104') and (`stdNo` = '20111013');
+UPDATE enrollment SET `scoreAttd` = '80', `socreMid` = '60', `scoreFinal` = '80' WHERE (`csNo` = '231110') and (`proNo` = 'P23102') and (`stdNo` = '21231002');
+UPDATE enrollment SET `scoreAttd` = '90', `socreMid` = '100', `scoreFinal` = '80' WHERE (`csNo` = '311003') and (`proNo` = 'P31104') and (`stdNo` = '22421003');
+UPDATE enrollment SET `scoreAttd` = '100', `socreMid` = '100', `scoreFinal` = '100' WHERE (`csNo` = '401019') and (`proNo` = 'P40101') and (`stdNo` = '22401001');
+UPDATE enrollment SET `scoreAttd` = '100', `socreMid` = '80', `scoreFinal` = '70' WHERE (`csNo` = '421012') and (`proNo` = 'P42103') and (`stdNo` = '22401001');
+UPDATE enrollment SET `scoreAttd` = '80', `socreMid` = '70', `scoreFinal` = '90' WHERE (`csNo` = '421012') and (`proNo` = 'P42103') and (`stdNo` = '22421003');
 
 
 -- 문제 7
-
+update enrollment set scoreTotal = (scoreAttd + scoreMid + scoreFinal) /3;
 
 -- 문제 8
+SET SQL_SAFE_UPDATES = 1;
 
+
+update enrollment set scoreGrade = 
+	case
+		when scoreTotal >= 90 then 'A'
+        when scoreTotal >= 80 then 'B'
+        when scoreTotal >= 70 then 'C'
+        when scoreTotal >= 60 then 'D'
+        else 'F'
+	end;
 
 -- 문제 9
-select max(scoreTotal) from enrollment;
+select
+	max(scoreTotal) as 총점
+from enrollment;
 
 -- 문제 10
-
+select
+	avg(scoreTotal)
+from enrollment e
+join student s on s.stdNo = e.stdNo
+where s.stdName = '정우성';
 
 
 
